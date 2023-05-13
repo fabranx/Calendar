@@ -46,6 +46,7 @@
 .day-event p {
   word-break: normal;
   white-space: break-spaces;
+  padding: 0px 5px;
 }
 
 .day-event-buttons {
