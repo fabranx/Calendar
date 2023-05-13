@@ -8,9 +8,7 @@ function BaseModal({
   handleSubmit,
   formData
 }) {
-
-  // console.info(formData)
-
+  
   return (
       <dialog ref={modalRef}>
         <h2 className='dialog-title'>{title}</h2>

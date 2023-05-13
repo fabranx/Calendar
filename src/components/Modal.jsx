@@ -53,7 +53,6 @@ function Modal({dialogRef, setEvents}) {
 
   function onDateChange(e) {
     setFormData(prev => {
-      console.info(e.target.value)
       return {
         ...prev,
         date: e.target.value

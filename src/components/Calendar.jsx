@@ -44,8 +44,6 @@ function Calendar() {
     }
   }
 
-console.log(events)
-
   return (
     <div className='calendar'>
 

@@ -27,7 +27,6 @@ function EditModal({editModalRef, setEvents, selectedDate, event, editEventIndex
     if(datetime.isValid && formData.event) {
       setEvents((prev) => {
         let new_events = editEvent(prev, selectedDate, datetime, formData.event, editEventIndex)
-        console.info("RETURNED", new_events)
         return new_events 
       })
       
@@ -47,7 +46,6 @@ function EditModal({editModalRef, setEvents, selectedDate, event, editEventIndex
 
   function onDateChange(e) {
     setFormData(prev => {
-      console.info(e.target.value)
       return {
         ...prev,
         date: e.target.value
