@@ -1,0 +1,50 @@
+.week-view {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(40px, 1fr));
+  grid-template-rows: repeat(1, minmax(505px, 1fr));
+  grid-column-gap: 5px;   
+}
+
+.week-view-day {
+border: 1px solid rgb(164, 164, 164);
+border-radius: 5px;
+font-size: 0.85rem;
+}
+
+.week-weekdays {
+  margin-top: 1.2rem;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(40px, 1fr));
+  grid-column-gap: 5px;
+}
+
+
+.week-event {
+  color: rgb(81, 45, 56);
+  background-color: rgba(243, 182, 31, 0.45);
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  border: 1px solid rgb(164, 164, 164);
+  box-shadow: 0px 1px 1px 0.1px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.week-event-title {
+  margin-top: 20px;
+  font-weight: 600;
+  transition: 0.5s ease;
+  font-size: 1rem;
+}
+
+
+@media (max-width: 650px) {
+  .week-event-title {
+    white-space: nowrap;
+    margin-top: 50px;
+    font-size: 1rem;
+    transform: rotate(90deg);
+  }
+}

@@ -1,0 +1,93 @@
+.day-view {
+  margin-top: 1.7rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  height: 529px;
+  outline: 1px solid rgb(164, 164, 164);
+  border-radius: 5px;
+  overflow-y: auto;
+}
+
+.day-event-title {
+  margin-top: 20px;
+  color: rgb(81, 45, 56);
+  background-color: rgba(243, 182, 31, 0.45);
+  width: 90%;
+  margin: 20px auto;
+  border-radius: 5px;
+  border: 1px solid rgb(164, 164, 164);
+  box-shadow: 0px 1px 1px 0.1px rgba(0, 0, 0, 0.4);
+}
+
+.day-events-list {
+  width: 90%;
+  margin: 20px auto;
+  list-style: decimal;
+}
+
+.day-events-list li::marker{
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.day-event {
+  border: 1px solid rgb(164, 164, 164);
+  background-color: rgba(255, 255, 255, 0.658);
+  margin: 10px 0px;
+  border-radius: 5px;
+  box-shadow: 0px 1px 1px 0.1px rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  padding: 5px;
+}
+
+.day-event p {
+  word-break: normal;
+  white-space: break-spaces;
+}
+
+.day-event-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.day-event-delete-button {
+  background-color: transparent;
+  color: rgb(185, 41, 41);
+  border: none;
+  padding: 5px;
+  height: 26px;
+}
+
+.day-event-delete-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+  color: rgb(190, 83, 83);
+}
+
+.day-event-edit-button {
+  background-color: transparent;
+  color: rgb(56, 126, 167);
+  border: none;
+  padding: 5px;
+  height: 26px;
+}
+
+.day-event-edit-button:hover {
+  cursor: pointer;
+  opacity: 0.6;
+  color: rgb(117, 157, 182);
+}
+
+@media (max-width: 500px) {
+  .day-event {
+    font-size: 0.85rem;
+  }
+
+  .day-events-list li::marker{
+    font-size: 0.6rem;
+  }
+}

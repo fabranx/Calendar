@@ -1,0 +1,48 @@
+.top-bar{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 40px;
+  box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+}
+
+.login-button {
+  background-image: linear-gradient(rgb(134, 20, 248) 0, rgb(118, 11, 224) 100%);
+  border-radius: 5px;
+  border-style: none;
+  color: #fff;
+  cursor: pointer;
+  height: 40px;
+  outline: 0;
+  text-align: center;
+  transition: all .3s cubic-bezier(.05, .03, .35, 1);
+  width: 100px;
+}
+
+.login-button:hover {
+  opacity: .7;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+
+.title {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+
+@media (max-width: 500px) {
+  .top-bar {
+    font-size: 0.8rem;
+  }
+
+  .login-button {
+    width: 80px;
+  } 
+}
