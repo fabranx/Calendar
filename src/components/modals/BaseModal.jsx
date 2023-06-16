@@ -6,7 +6,8 @@ function BaseModal({
   onDateChange,
   onEventChange,
   handleSubmit,
-  formData
+  formData,
+  error
 }) {
   
   return (
@@ -26,6 +27,7 @@ function BaseModal({
             <p>Descrizione</p> 
             <textarea className='dialog-form-textarea' onChange={onEventChange} value={formData.event}></textarea>
           </label>
+          {error ? <p>{error}</p> : null}
           <div className='dialog-form-submit'>
             <button className='dialog-button cancelButton' onClick={() => modalRef.current.close()} formMethod="dialog">Cancella</button>
             <button className='dialog-button submitButton' type='submit'>Conferma</button>  

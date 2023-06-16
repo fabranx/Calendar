@@ -1,14 +1,15 @@
 import './Day.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
 import { faEdit } from '@fortawesome/free-solid-svg-icons'
 import { formatOpt } from '../../dateFormats'
-
+import { LoginContext } from '../../context'
 import EditModal from '../modals/EditModal'
 import { deleteEvent } from '../../eventsOperations'
+import { client } from '../../api-client'
 
-function Day({events, selectedDate, weekDayNames, setDateInterval, setEvents}) {
+function Day({events, selectedDate, weekDayNames, setDateInterval, setEvents, editEventMutation, deleteEventMutation}) {
   
   useEffect(() => {
     setDateInterval(selectedDate.toFormat(`${formatOpt.fullDateStr}`))
@@ -17,8 +18,10 @@ function Day({events, selectedDate, weekDayNames, setDateInterval, setEvents}) {
 
   const editModalRef = useRef(null)
   const [editEventIndex, setEditEventIndex] = useState(null)
+  const {isLoggedIn} = useContext(LoginContext)
 
-  function editEvent(i) {
+
+  function handleEditEvent(i) {
     setEditEventIndex(i)
     showEditModal()
   }
@@ -29,30 +32,40 @@ function Day({events, selectedDate, weekDayNames, setDateInterval, setEvents}) {
     }
   }
 
-  function handleDeleteEvent(index) {
-    setEvents((prev) => {
-      let new_events = deleteEvent(prev, selectedDate, index)
-      return new_events
-    })
+  function handleDeleteEvent(index, id) {
+    if(isLoggedIn) {
+      deleteEventMutation.mutate({
+        token: client.token,
+        username: client.username,
+        id: id
+      })
+    }
+    else {
+      setEvents((prev) => {
+        let new_events = deleteEvent(prev, selectedDate, index)
+        return new_events
+      })
+    }
+
   }
 
   const weekday = selectedDate.weekday
-  const dayEvent = events?.[selectedDate.year]?.[selectedDate.month]?.[selectedDate.day]
+  const dayEvents = events?.[selectedDate.year]?.[selectedDate.month]?.[selectedDate.day]
   let eventElement = null
 
-  if(dayEvent) {
+  if(dayEvents) {
     eventElement = <>
-      <h4 className='day-event-title'>{dayEvent.length} {dayEvent.length > 1 ? 'eventi' : 'evento'}</h4>
+      <h4 className='day-event-title'>{dayEvents.length} {dayEvents.length > 1 ? 'eventi' : 'evento'}</h4>
       <ul className='day-events-list'>
-        { dayEvent.map((event, i) =>
+        { dayEvents.map((event, i) =>
             <li key={i}>
               <div className='day-event'>
-                <p>{event}</p>
+                <p>{event.description}</p>
                 <div className='day-event-buttons'>
-                  <button onClick={() => editEvent(i)} className='day-event-edit-button'>
+                  <button onClick={() => handleEditEvent(i)} className='day-event-edit-button'>
                     <FontAwesomeIcon icon={faEdit}/>  
                   </button>
-                  <button onClick={() => handleDeleteEvent(i)} className='day-event-delete-button'>
+                  <button onClick={() => handleDeleteEvent(i, event.id)} className='day-event-delete-button'>
                     <FontAwesomeIcon icon={faTrashCan}/>  
                   </button>
                 </div>
@@ -70,13 +83,14 @@ function Day({events, selectedDate, weekDayNames, setDateInterval, setEvents}) {
         <p>{weekDayNames[weekday-1] + ' ' + selectedDate.toFormat(`${formatOpt.day}`)}</p>
         {eventElement}
       </div>
-      {dayEvent ? 
+      {dayEvents ? 
         <EditModal 
           editModalRef={editModalRef} 
           setEvents={setEvents} 
           selectedDate={selectedDate}
-          event={dayEvent[editEventIndex]}
+          event={dayEvents[editEventIndex] ? dayEvents[editEventIndex] : ''}
           editEventIndex={editEventIndex}
+          editEventMutation={editEventMutation}
         /> 
         : null
       }

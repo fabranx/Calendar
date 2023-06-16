@@ -5,6 +5,7 @@
   padding: 10px 40px;
   box-shadow: 0px 5px 10px 1px rgba(0, 0, 0, 0.4);
   border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .login-button {
@@ -34,6 +35,28 @@ a {
   display: flex;
   align-items: center;
   cursor: pointer;
+}
+
+
+.signed-in-div {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  font-weight: 600;
+  height: 40px;
+}
+
+.logout-button {
+  background-color: transparent;
+  border: none;
+  color: black;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.logout-button:hover{
+  color: rgb(134, 20, 248);
+  transform: scale(1.2);
 }
 
 

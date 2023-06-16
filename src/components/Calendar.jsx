@@ -2,11 +2,15 @@ import './Calendar.css'
 import Day from './calendar-views/Day'
 import Week from './calendar-views/Week'
 import Month from './calendar-views/Month'
-import {DateTime, Info} from 'luxon'
-import { useState, useRef, useEffect } from 'react'
+import { DateTime, Info } from 'luxon'
+import { useState, useRef, useEffect, useContext } from 'react'
 import AddModal from './modals/AddModal'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons'
+import { LoginContext } from "../context"
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
+import { addEventApi, client, deleteEventApi, getEventsApi, updateEventApi } from '../api-client'
+import { addEvent } from '../eventsOperations'
 
 const views = {
   MONTH: 'month',
@@ -23,14 +27,68 @@ function Calendar() {
   const [selectedDate, setSelectedDate] = useState(dateNow)
   const [selectedView, setSelectedView] = useState(views.MONTH)
   const [dateInterval, setDateInterval] = useState('')
-  const [events, setEvents] = useState(
-    JSON.parse(localStorage.getItem('events')) || {}
-  )
+  const [events, setEvents] = useState(JSON.parse(localStorage.getItem('events')) || {})
   const addModalRef = useRef(null)
+  const {isLoggedIn} = useContext(LoginContext)
+
+
+  const {data, status} = useQuery({
+   queryKey: ['events', client.username, client.token],
+   queryFn: () => getEventsApi(client.username, client.token),
+   enabled: isLoggedIn,
+  })
+
+  const queryClient = useQueryClient()
+
+  const addEventMutation = useMutation(addEventApi, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('events')
+    }
+  })
+
+  const editEventMutation = useMutation(updateEventApi,{
+    onSuccess: () => {
+      queryClient.invalidateQueries('events')
+    },
+  })
+
+  const deleteEventMutation = useMutation(deleteEventApi,{
+    onSuccess: () => {
+      queryClient.invalidateQueries('events')
+    }
+  })
+  
 
   useEffect(() => {
-    localStorage.setItem('events', JSON.stringify(events))
+    if(status === 'success') {
+      if(data.data.length == 0) {
+        setEvents({})
+      }
+      else{
+        let new_events = {}
+        data.data.map(obj => {
+          let datetime = DateTime.fromISO(obj.date)
+          new_events = addEvent(new_events, datetime, obj.description, obj.id)
+        })
+        setEvents(new_events)
+      }
+    }
+  }, [data])
+
+
+  useEffect(() => {
+    // save events in local storage only if user is not logged
+    if(!isLoggedIn) {
+      localStorage.setItem('events', JSON.stringify(events))
+    }
   }, [events])
+
+  useEffect(() => {
+    // restore events from local storage when user is logged out
+    if(!isLoggedIn) {
+      setEvents(JSON.parse(localStorage.getItem('events')) || {})
+    }
+  }, [isLoggedIn])
 
 
   function eventClickHandler(date) {
@@ -105,11 +163,17 @@ function Calendar() {
             weekDayNames={weekDayNames} 
             setDateInterval={setDateInterval}
             setEvents={setEvents}
+            editEventMutation={editEventMutation}
+            deleteEventMutation={deleteEventMutation}
           /> : null
         }
       </div>
 
-      <AddModal addModalRef={addModalRef} setEvents={setEvents}/>
+      <AddModal 
+        addModalRef={addModalRef} 
+        setEvents={setEvents} 
+        addEventMutation={addEventMutation}
+      />
 
     </div>
   )

@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { DateTime } from 'luxon';
 import BaseModal from './BaseModal';
 import { addEvent } from '../../eventsOperations';
+import { LoginContext } from '../../context';
+import { client } from '../../api-client';
 
-function AddModal({addModalRef, setEvents}) {
+function AddModal({addModalRef, setEvents, addEventMutation}) {
+
+  const {isLoggedIn} = useContext(LoginContext)
 
   const [formData, setFormData] = useState({
     date: '',
@@ -16,15 +20,30 @@ function AddModal({addModalRef, setEvents}) {
 
     const datetime = DateTime.fromISO(formData.date)
 
-    if(datetime.isValid && formData.event) {
+    if(datetime.isValid && formData.event && formData.event.trim()) {
 
-      setEvents((prev) => {
-        let new_events = addEvent(prev, datetime, formData.event)
-        return new_events
-      })
+      if(isLoggedIn) {
+        addEventMutation.mutate({ 
+          token: client.token, 
+          data: {
+            author: client.pk,
+            date: datetime.toISODate(),
+            description: formData.event
+          }
+        })
+      }
+      else {
+        setEvents((prev) => {
+          let new_events = addEvent(prev, datetime, formData.event)
+          return new_events
+        })
+      }
       
-      setFormData({date: '', event: ''})
-      addModalRef.current.close()
+      if(!addEventMutation.isLoading && !addEventMutation.isError) {
+        setFormData({date: '', event: ''})
+        addModalRef.current.close()
+      }
+
     }
   }
 
@@ -54,6 +73,7 @@ function AddModal({addModalRef, setEvents}) {
       onEventChange={onEventChange}
       handleSubmit={handleSubmit}
       formData={formData}
+      error={addEventMutation.isError ? addEventMutation.error.message : null}
     />
   )
 }

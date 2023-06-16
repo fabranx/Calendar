@@ -5,7 +5,6 @@ import { formatOpt } from '../../dateFormats'
 
 const CELLS = 7
 
-
 function Week({
   events, 
   selectedDate, 

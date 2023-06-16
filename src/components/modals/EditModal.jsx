@@ -1,19 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { LoginContext } from '../../context';
 import { DateTime } from 'luxon';
 import BaseModal from './BaseModal';
 import { editEvent } from '../../eventsOperations';
+import { client } from '../../api-client';
 
 
-function EditModal({editModalRef, setEvents, selectedDate, event, editEventIndex}) {
+function EditModal({editModalRef, setEvents, selectedDate, event, editEventIndex, editEventMutation}) {
+
+  const {isLoggedIn} = useContext(LoginContext)
 
   const [formData, setFormData] = useState({
     date: selectedDate.toISODate(),
-    event: event,
+    event: event.description,
   })
 
   useEffect(() => {
     setFormData({
-        event: event,
+        event: event.description,
         date: selectedDate.toISODate()
       })
   }, [selectedDate, event])
@@ -24,14 +28,30 @@ function EditModal({editModalRef, setEvents, selectedDate, event, editEventIndex
 
     const datetime = DateTime.fromISO(formData.date)
 
-    if(datetime.isValid && formData.event) {
-      setEvents((prev) => {
-        let new_events = editEvent(prev, selectedDate, datetime, formData.event, editEventIndex)
-        return new_events 
-      })
-      
-      // setFormData({date: '', event: ''})
-      editModalRef.current.close()
+    if(datetime.isValid && formData.event && formData.event.trim()) {
+
+      if(isLoggedIn) {
+        editEventMutation.mutate({
+          token: client.token,
+          username: client.username,
+          id: event.id,
+          data: {
+            author: client.pk,
+            date: datetime.toISODate(),
+            description: formData.event,
+          }
+        })
+      }
+      else {
+        setEvents((prev) => {
+          let new_events = editEvent(prev, selectedDate, datetime, formData.event, editEventIndex)
+          return new_events 
+        })   
+      }
+
+      if(!editEventMutation.isLoading && !editEventMutation.isError) {
+        editModalRef.current.close()
+      }
     }
   }
 
@@ -61,6 +81,7 @@ function EditModal({editModalRef, setEvents, selectedDate, event, editEventIndex
       onEventChange={onEventChange}
       handleSubmit={handleSubmit}
       formData={formData}
+      error={editEventMutation.isError ? editEventMutation.error.message : null}
     />
   )
 }

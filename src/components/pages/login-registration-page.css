@@ -1,0 +1,65 @@
+.login-registration-page {
+  text-align: center;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-registration-form {
+  margin: 50px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 80%;
+  max-width: 900px;
+}
+
+.input-label {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  align-items: center;
+  font-size: 0.85rem;
+  gap: 5px;
+}
+
+.login-registration-input {
+  text-align: center;
+  background-color: #f4f9fc;
+  color: black;
+  padding: 0 5px 0 5px;
+  height: 2rem;
+  border-radius: 5px;
+  border: 1px solid rgba(20, 20, 20, 0.5);
+  width: 100%;
+}
+
+.login-registration-button {
+  width: 100%;
+  max-width: 300px;
+  height: 2rem;
+  background-color: rgb(40, 149, 239);
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.login-registration-button:hover {
+  background-color: rgb(101, 168, 222);
+}
+
+
+.login-registration-link {
+  text-align: center;
+  justify-self: center;
+  max-width: fit-content;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.login-registration-link:hover{
+  color: rgb(134, 20, 248)
+}
