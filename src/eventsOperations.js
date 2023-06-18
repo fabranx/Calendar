@@ -62,7 +62,7 @@ export function editEvent(eventsObj, prev_date, new_date, new_event, index) {  /
   let new_events = {...eventsObj}  // copy objects with ... tells react that this is new object and should be re-render
   if(prev_date.toISODate() === new_date.toISODate()) {  // if same date modify only the event text
     new_events[new_date.year][new_date.month][new_date.day][index] = {
-      id: id,
+      id: undefined,
       description: new_event
     }
   }
